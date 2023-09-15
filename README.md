@@ -1,5 +1,6 @@
-# ShopappApi
-## Asp.Net Core web Api --SDK 7.0
+# ShopApi
+## Asp.Net Core Web Api --SDK-Version 7.0
+### Onion Architecture
 ### Entity Framework
 ### Entity Framework Identity
 ### Microsoft Sql Server
