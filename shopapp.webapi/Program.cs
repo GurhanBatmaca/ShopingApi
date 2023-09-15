@@ -68,6 +68,19 @@ builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 builder.Services.AddScoped<IProductService,ProductManager>();   
 builder.Services.AddScoped<ICategoryService,CategoryManager>();  
 
+builder.Services.AddCors(options => 
+{
+    options.AddPolicy(
+        name: "_myAllowOrigins",
+        builder => {
+            builder
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        }
+    );
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -78,6 +91,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("_myAllowOrigins");
 
 app.UseAuthentication();
 
