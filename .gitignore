@@ -1,0 +1,13 @@
+.vscode
+bin
+obj
+*.db
+appsettings.json
+wwwroot
+
+bin/
+obj/
+.vs/
+*.suo
+
+**/appsettings.json
