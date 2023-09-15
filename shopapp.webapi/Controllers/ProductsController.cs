@@ -41,7 +41,7 @@ namespace shopapp.webapi.Controllers
             return Ok(product);
         }
 
-        // [Authorize]
+        [Authorize]
 
         [HttpGet]
         [Route("url={url}")]
@@ -52,5 +52,6 @@ namespace shopapp.webapi.Controllers
 
             return Ok(product);
         }
+
     }
 }
