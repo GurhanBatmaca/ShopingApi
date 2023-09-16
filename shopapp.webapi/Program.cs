@@ -1,6 +1,9 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using shopapp.business.Abstract;
 using shopapp.business.Concrete;
 using shopapp.data.Abstract;
@@ -79,6 +82,23 @@ builder.Services.AddCors(options =>
                 .AllowAnyMethod();
         }
     );
+});
+
+
+builder.Services.AddAuthentication(auth => {
+    auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options => {
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidAudience = "shopingapi",
+        ValidIssuer = "shopingapi",
+        RequireExpirationTime = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("this is the key we will use")),
+        ValidateIssuerSigningKey = true
+    };
 });
 
 var app = builder.Build();

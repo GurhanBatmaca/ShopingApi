@@ -21,29 +21,55 @@ namespace shopapp.webapi.Controllers
         }
 
         [HttpPost]
+        [Route("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(model);
+            }
+
+            var checkName = await userManager!.FindByNameAsync(model.UserName!);
+
+            if(checkName != null)
+            {
+                return BadRequest(new ResponseModel{Message="This username is already taken.",IsSuccsess=false});
+            }
+
+            var user = new ApplicationUser()
+            {
+                UserName = model.UserName,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = model.Email
+            };
+            return Ok();
+        }
+
+        [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
             if(!ModelState.IsValid)
             {
-                return BadRequest("Validation error.");
+                return BadRequest(model);
             }
 
             var user = await userManager!.FindByEmailAsync(model.Email!);
 
             if(user == null)
             {
-                return BadRequest("User not found.");
+                return BadRequest(new ResponseModel{Message="User not found.",IsSuccsess=false});
             }
 
             var result = await signInManager!.PasswordSignInAsync(user,model.Password!,true,false);
 
             if(result.Succeeded)
             {
-                return Content("Login Succsessfuly.");
+                return Ok(new ResponseModel{Message="Login successful.",IsSuccsess=true});
             }
 
-            return BadRequest("Password is wrong.");
+            return BadRequest(new ResponseModel{Message="Wrong password.",IsSuccsess=false});
         }
 
         [HttpGet]
@@ -51,7 +77,7 @@ namespace shopapp.webapi.Controllers
         public async Task<IActionResult> Logout()
         {
             await signInManager!.SignOutAsync();
-            return Content("Logout Succsessfuly.");
+            return Content("Logout successful.");
         }
     }
 }
