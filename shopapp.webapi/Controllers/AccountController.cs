@@ -29,20 +29,6 @@ namespace shopapp.webapi.Controllers
                 return BadRequest(model);
             }
 
-            var checkName = await userManager!.FindByNameAsync(model.UserName!);
-
-            if(checkName != null)
-            {
-                return BadRequest(new ResponseModel{Message="This username is already taken.",IsSuccsess=false});
-            }
-
-            var user = new ApplicationUser()
-            {
-                UserName = model.UserName,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                Email = model.Email
-            };
             return Ok();
         }
 
@@ -59,17 +45,17 @@ namespace shopapp.webapi.Controllers
 
             if(user == null)
             {
-                return BadRequest(new ResponseModel{Message="User not found.",IsSuccsess=false});
+                return BadRequest(new ResponseObject{Message="User not found.",IsSuccsess=false});
             }
 
             var result = await signInManager!.PasswordSignInAsync(user,model.Password!,true,false);
 
             if(result.Succeeded)
             {
-                return Ok(new ResponseModel{Message="Login successful.",IsSuccsess=true});
+                return Ok(new ResponseObject{Message="Login successful.",IsSuccsess=true});
             }
 
-            return BadRequest(new ResponseModel{Message="Wrong password.",IsSuccsess=false});
+            return BadRequest(new ResponseObject{Message="Wrong password.",IsSuccsess=false});
         }
 
         [HttpGet]
@@ -78,6 +64,24 @@ namespace shopapp.webapi.Controllers
         {
             await signInManager!.SignOutAsync();
             return Content("Logout successful.");
+        }
+
+        [HttpPost]
+        [Route("confirmemail/{token}/{userId}")]
+        public async Task<IActionResult> ConfirmEmail(string token,string userId)
+        {
+            if(string.IsNullOrEmpty(token) && string.IsNullOrEmpty(userId))
+            {
+                return BadRequest("Token and userId not found");
+            }
+
+            var tokenlar = "123";
+            var userlar = "123kkkkkkkkkkkk";
+
+            await signInManager!.SignOutAsync();
+
+            var url = $"http://localhost:5182/confirmemail/{tokenlar}/{userlar}";
+            return Ok(url);
         }
     }
 }

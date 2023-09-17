@@ -1,6 +1,6 @@
 namespace shopapp.webapi.Model
 {
-    public class ResponseModel
+    public class ResponseObject
     {
         public string? Message { get; set; }
         public bool IsSuccsess { get; set; }

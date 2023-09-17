@@ -9,6 +9,7 @@ using shopapp.business.Concrete;
 using shopapp.data.Abstract;
 using shopapp.data.Concrete.EfCore;
 using shopapp.webapi.Identity;
+using shopapp.webui.EmailServices;
 using shopapp.webui.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -100,6 +101,16 @@ builder.Services.AddAuthentication(auth => {
         ValidateIssuerSigningKey = true
     };
 });
+
+builder.Services.AddScoped<IEmailSender,SmtpEmailSender>( i => 
+    new SmtpEmailSender(
+        builder.Configuration["EmailSender:Host"]!,
+        builder.Configuration.GetValue<int>("EmailSender:Port"),
+        builder.Configuration.GetValue<bool>("EmailSender:EnableSSL"),
+        builder.Configuration["EmailSender:UserName"]!,
+        builder.Configuration["EmailSender:Password"]!
+    )
+);
 
 var app = builder.Build();
 
