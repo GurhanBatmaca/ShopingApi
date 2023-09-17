@@ -7,15 +7,17 @@ namespace shopapp.webapi.IdentityServices
 {
     public class UserService
     {
-        private readonly UserManager<ApplicationUser>? userManager;
-        private readonly SignInManager<ApplicationUser>? signInManager; 
-        private readonly IEmailSender? emailSender;
+         readonly UserManager<ApplicationUser>? userManager;
+         readonly SignInManager<ApplicationUser>? signInManager; 
+         readonly RoleManager<IdentityRole>? roleManager; 
+         readonly IEmailSender? emailSender;
 
-        public UserService(UserManager<ApplicationUser>? _userManager,SignInManager<ApplicationUser>? _signInManager,IEmailSender? _emailSender)
+        public UserService(UserManager<ApplicationUser>? _userManager,SignInManager<ApplicationUser>? _signInManager,IEmailSender? _emailSender,RoleManager<IdentityRole>? _roleManager)
         {
             userManager = _userManager;
             signInManager = _signInManager;
             emailSender = _emailSender;
+            roleManager = _roleManager;
         }
         public async Task<bool> CreateAsync(RegisterModel model)
         {
@@ -48,20 +50,46 @@ namespace shopapp.webapi.IdentityServices
             }
 
             var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+            
+            await emailSender!.SendEmailAsync(user.Email!,"Üyelik Onayı.",$"Hesabınızı onaylamak için lütfen <a href=http://localhost:5197/api/Account/confirmemail/{token}&{user.Id}'>linke</a> tıklayınız");
 
-            // });http://localhost:5197/api/Account/confirmemail/ggggg/yyyyyy
-
-            var url = $"http://localhost:5197/api/Account/confirmemail/{token}/{user.Id}";
-
-            await emailSender!.SendEmailAsync(user.Email!,"Üyelik Onayı.","");
-
+            var result2 = await userManager.AddToRoleAsync(user,"Customer");
 
             Message += "User created,Check your e-mail for confirmation.";
+            return true;
+        }
 
+        public async Task<bool> ConfirmEmailAsync(string token,string userId)
+        {
 
+            if(string.IsNullOrEmpty(token) && string.IsNullOrEmpty(userId))
+            {
+                Message += "Token and UserId is required.";
+                return false;
+            }
+
+            var user = await userManager!.FindByIdAsync(userId);
+
+            if(user == null)
+            {
+                Message += "User not found.";
+                return false;
+            }
+
+            var result = await userManager!.ConfirmEmailAsync(user!,token);
+
+            if(!result.Succeeded)
+            {
+                Message += "token error.";
+                return false;
+            }
+
+            Message += "Confirmation successful.";
             return true;
         }
 
         public string? Message { get; set; }
     }
+
+
 }
