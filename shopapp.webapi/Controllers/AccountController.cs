@@ -77,7 +77,7 @@ namespace shopapp.webapi.Controllers
         //     return Content("Logout successful.");
         // }
 
-        [HttpPost]
+        [HttpGet]
         [Route("confirmemail/{token}&{userId}")]
         public async Task<IActionResult> ConfirmEmail(string token,string userId)
         {

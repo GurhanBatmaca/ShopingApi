@@ -1,4 +1,6 @@
+using System.Text;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 using shopapp.webapi.Identity;
 using shopapp.webapi.Model;
 using shopapp.webui.EmailServices;
@@ -50,8 +52,10 @@ namespace shopapp.webapi.IdentityServices
             }
 
             var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+            var encodedToken = Encoding.UTF8.GetBytes(token);
+            var validToken = WebEncoders.Base64UrlEncode(encodedToken);
             
-            await emailSender!.SendEmailAsync(user.Email!,"Üyelik Onayı.",$"Hesabınızı onaylamak için lütfen <a href=http://localhost:5197/api/Account/confirmemail/{token}&{user.Id}'>linke</a> tıklayınız");
+            await emailSender!.SendEmailAsync(user.Email!,"Üyelik Onayı.",$"Hesabınızı onaylamak için lütfen <a href='http://localhost:5197/api/Account/confirmemail/{validToken}&{user.Id}'>linke</a> tıklayınız");
 
             var result2 = await userManager.AddToRoleAsync(user,"Customer");
 
@@ -76,7 +80,9 @@ namespace shopapp.webapi.IdentityServices
                 return false;
             }
 
-            var result = await userManager!.ConfirmEmailAsync(user!,token);
+            var confirmToken = Encoding.UTF8.GetString(Convert.FromBase64String(token));
+
+            var result = await userManager!.ConfirmEmailAsync(user!,confirmToken);
 
             if(!result.Succeeded)
             {
