@@ -10,6 +10,7 @@ using shopapp.data.Abstract;
 using shopapp.data.Concrete.EfCore;
 using shopapp.webapi.Identity;
 using shopapp.webapi.IdentityServices;
+using shopapp.webapi.IdentityServices.Abstract;
 using shopapp.webui.EmailServices;
 using shopapp.webui.Identity;
 
@@ -73,7 +74,8 @@ builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 builder.Services.AddScoped<IProductService,ProductManager>();   
 builder.Services.AddScoped<ICategoryService,CategoryManager>();  
 
-builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<IUserService,UserService>();
+builder.Services.AddScoped<ISignService,SignService>();
 
 builder.Services.AddCors(options => 
 {

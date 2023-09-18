@@ -1,25 +1,22 @@
+using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using shopapp.webapi.Identity;
+using shopapp.webapi.IdentityServices.Abstract;
 using shopapp.webapi.Model;
 using shopapp.webui.EmailServices;
 
 namespace shopapp.webapi.IdentityServices
 {
-    public class UserService
+    public class UserService: IUserService
     {
-         readonly UserManager<ApplicationUser>? userManager;
-         readonly SignInManager<ApplicationUser>? signInManager; 
-         readonly RoleManager<IdentityRole>? roleManager; 
-         readonly IEmailSender? emailSender;
-
-        public UserService(UserManager<ApplicationUser>? _userManager,SignInManager<ApplicationUser>? _signInManager,IEmailSender? _emailSender,RoleManager<IdentityRole>? _roleManager)
+        private readonly UserManager<ApplicationUser>? userManager;
+        private readonly IEmailSender? emailSender;
+        public UserService(UserManager<ApplicationUser>? _userManager,IEmailSender? _emailSender)
         {
             userManager = _userManager;
-            signInManager = _signInManager;
             emailSender = _emailSender;
-            roleManager = _roleManager;
         }
         public async Task<bool> CreateAsync(RegisterModel model)
         {
@@ -57,7 +54,7 @@ namespace shopapp.webapi.IdentityServices
             
             await emailSender!.SendEmailAsync(user.Email!,"Üyelik Onayı.",$"Hesabınızı onaylamak için lütfen <a href='http://localhost:5197/api/Account/confirmemail/{validToken}&{user.Id}'>linke</a> tıklayınız");
 
-            var result2 = await userManager.AddToRoleAsync(user,"Customer");
+            await userManager.AddToRoleAsync(user,"Customer");
 
             Message += "User created,Check your e-mail for confirmation.";
             return true;
@@ -93,7 +90,6 @@ namespace shopapp.webapi.IdentityServices
             Message += "Confirmation successful.";
             return true;
         }
-
         public string? Message { get; set; }
     }
 

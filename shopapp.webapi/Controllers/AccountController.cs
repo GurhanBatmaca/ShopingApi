@@ -1,8 +1,10 @@
 using Azure;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using shopapp.webapi.Identity;
 using shopapp.webapi.IdentityServices;
+using shopapp.webapi.IdentityServices.Abstract;
 using shopapp.webapi.Model;
 
 namespace shopapp.webapi.Controllers
@@ -12,16 +14,13 @@ namespace shopapp.webapi.Controllers
     [Route("api/[Controller]")]
     public class AccountController: ControllerBase
     {
-        private readonly UserManager<ApplicationUser>? userManager;
-        private readonly SignInManager<ApplicationUser>? signInManager; 
-        private readonly UserService? userService;
+        private readonly IUserService? userService;
+        private readonly ISignService? signService;
 
-        public AccountController(UserManager<ApplicationUser>? _userManager,SignInManager<ApplicationUser>? _signInManager,UserService? _userService)
+        public AccountController(IUserService? _userService,ISignService? _signService)
         {
-            userManager = _userManager;
-            signInManager = _signInManager;
-            userService = _userService;
-            
+            userService = _userService;   
+            signService = _signService;        
         }
 
         [HttpPost]
@@ -33,49 +32,31 @@ namespace shopapp.webapi.Controllers
                 return BadRequest(model);
             }
 
-            // return Ok();
-
             if(await userService!.CreateAsync(model))
             {
-                return Ok(new ResponseObject{Message=userService.Message,IsSuccsess=true});
+                return Ok(new ResponseObject{ Message = userService.Message });
             }
 
-            return BadRequest(new ResponseObject{Message=userService.Message,IsSuccsess=false});
+            return BadRequest(new ResponseObject{ Message = userService.Message });
         }
 
-        // [HttpPost]
-        // [Route("login")]
-        // public async Task<IActionResult> Login([FromBody] LoginModel model)
-        // {
-        //     if(!ModelState.IsValid)
-        //     {
-        //         return BadRequest(model);
-        //     }
+        [HttpPost]
+        [Route("login")]
 
-        //     var user = await userManager!.FindByEmailAsync(model.Email!);
+        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(model);
+            }
 
-        //     if(user == null)
-        //     {
-        //         return BadRequest(new ResponseObject{Message="User not found.",IsSuccsess=false});
-        //     }
+            if(!await signService!.LoginAsync(model))
+            {
+                return BadRequest(new ResponseObject{ Message = signService.Message });
+            }
 
-        //     var result = await signInManager!.PasswordSignInAsync(user,model.Password!,true,false);
-
-        //     if(result.Succeeded)
-        //     {
-        //         return Ok(new ResponseObject{Message="Login successful.",IsSuccsess=true});
-        //     }
-
-        //     return BadRequest(new ResponseObject{Message="Wrong password.",IsSuccsess=false});
-        // }
-
-        // [HttpGet]
-        // [Route("logout")]
-        // public async Task<IActionResult> Logout()
-        // {
-        //     await signInManager!.SignOutAsync();
-        //     return Content("Logout successful.");
-        // }
+            return Ok(new ResponseObject{ Message = signService.Message, ExpireDate = signService.ExpireDate });
+        }
 
         [HttpGet]
         [Route("confirmemail/{token}&{userId}")]
@@ -83,12 +64,10 @@ namespace shopapp.webapi.Controllers
         {
             if(await userService!.ConfirmEmailAsync(token,userId))
             {
-                return Ok(new ResponseObject{Message=userService.Message,IsSuccsess=true});               
+                return Ok(new ResponseObject{ Message = userService.Message });               
             }
 
-            return BadRequest(new ResponseObject{Message=userService.Message,IsSuccsess=false});
-
-            // return Ok();
+            return BadRequest(new ResponseObject{ Message = userService.Message });
             
         }
     }
