@@ -3,4 +3,5 @@
 ### Onion Architecture
 ### Entity Framework
 ### Entity Framework Identity
+### JWT Bearer
 ### Microsoft Sql Server
