@@ -97,10 +97,10 @@ builder.Services.AddAuthentication(auth => {
     {
         ValidateIssuer = true,
         ValidateAudience = true,
-        ValidAudience = "shopingapi",
-        ValidIssuer = "shopingapi",
+        ValidAudience = builder.Configuration["AuthSettings:Audince"],
+        ValidIssuer = builder.Configuration["AuthSettings:Issuer"],
         RequireExpirationTime = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("this is the key we will use")),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["AuthSettings:Key"]!)),
         ValidateIssuerSigningKey = true
     };
 });
