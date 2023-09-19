@@ -21,8 +21,8 @@ namespace shopapp.webapi.Controllers
             categoryService = _categoryService;
         }
 
-        [HttpGet("page={page}")]
-        // [Route("page={page}")]
+        [HttpGet]
+        [Route("page={page}")]
         public async Task<IActionResult> GetAllProducts(int page=1)
         {
             var pageSize = 2;
@@ -31,6 +31,7 @@ namespace shopapp.webapi.Controllers
             return Ok(products);
         }
 
+        [Authorize(Roles ="Admin")]
 
         [HttpGet]
         [Route("id={id}")]
@@ -41,7 +42,7 @@ namespace shopapp.webapi.Controllers
             return Ok(product);
         }
 
-        [Authorize]
+        [Authorize(Roles ="Admin,Customer")]
 
         [HttpGet]
         [Route("url={url}")]
