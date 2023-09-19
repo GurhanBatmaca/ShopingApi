@@ -2,7 +2,6 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using shopapp.business.Abstract;
 using shopapp.business.Concrete;
@@ -35,35 +34,32 @@ builder.Services.AddIdentity<ApplicationUser,IdentityRole>().AddEntityFrameworkS
 
 builder.Services.Configure<IdentityOptions>(options => {
     // password
-    options.Password.RequireDigit = true; // şifrede numara olmak zorunda
-    options.Password.RequireLowercase = true; // küçük harf 
-    options.Password.RequireUppercase = true; // büyük harf 
-    options.Password.RequiredLength = 6; // 6 karakter minimum
-    options.Password.RequireNonAlphanumeric = true; // alphanumeric 
+    options.Password.RequireDigit = true; 
+    options.Password.RequireLowercase = true; 
+    options.Password.RequireUppercase = true; 
+    options.Password.RequiredLength = 6; 
+    options.Password.RequireNonAlphanumeric = true; 
 
     // lockout
-    options.Lockout.MaxFailedAccessAttempts = 5; // 5 hatadan sonra hesap kilitlenir
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5); // kilitli hesap kaç dk sonra açılsın
-    options.Lockout.AllowedForNewUsers = true; // lockout aktif olması için
+    options.Lockout.MaxFailedAccessAttempts = 5; 
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5); 
+    options.Lockout.AllowedForNewUsers = true; 
 
-    // options.User.AllowedUserNameCharacters = ""; // isimde olmasını istediğin ekler
-    options.User.RequireUniqueEmail = true; // 1 mail adresi ile tek kullanıcı
-    options.SignIn.RequireConfirmedEmail = true; // mail adresi onaylamadan giriş yapamaz
-    options.SignIn.RequireConfirmedPhoneNumber = false; // telefonla onaylamadan giriş yapamaz
+    options.User.RequireUniqueEmail = true; 
+    options.SignIn.RequireConfirmedEmail = true; 
+    options.SignIn.RequireConfirmedPhoneNumber = false; 
 });
 
 builder.Services.ConfigureApplicationCookie(options => {
-    options.LoginPath = "/account/login"; // cookie tanınmaz ise vs gideceği sayfa
-    options.LogoutPath = "/account/logout"; // çıkış yapınca gidilecek yer
-    options.AccessDeniedPath = "/account/accessdenied"; // yetkisiz yere girmek istenince gidlecek sayfa
-    options.SlidingExpiration = true; // giriş yaptıktan sonra istek yaptığında var sayılan süreyi sıfırlar(alttaki süre tekrar başlar)
-    options.ExpireTimeSpan = TimeSpan.FromDays(7); // giriş yaptıktan sonra ne kadar süre site kullanıcıyı tanısın(istek yapmadan, eğer istek yaparsa üstteki ayar sayesinde sıfırlanır)
-
-    // FromMinutes(60)
+    options.LoginPath = "/account/login"; 
+    options.LogoutPath = "/account/logout"; 
+    options.AccessDeniedPath = "/account/accessdenied"; 
+    options.SlidingExpiration = true; 
+    options.ExpireTimeSpan = TimeSpan.FromDays(7); 
 
     options.Cookie = new CookieBuilder
     {
-        HttpOnly = true, // cookieler sadece http isteği ile alınır
+        HttpOnly = true, 
         Name = ".MyShopapp.Security.Cookie",
         SameSite = SameSiteMode.Strict
     };
@@ -89,7 +85,6 @@ builder.Services.AddCors(options =>
         }
     );
 });
-
 
 builder.Services.AddAuthentication(auth => {
     auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

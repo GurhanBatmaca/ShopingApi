@@ -2,18 +2,15 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.IdentityModel.Tokens;
 using shopapp.webapi.Identity;
 using shopapp.webapi.IdentityServices.Abstract;
 using shopapp.webapi.Model;
-using shopapp.webui.EmailServices;
 
 namespace shopapp.webapi.IdentityServices
 {
     public class SignService: ISignService
     {
-
         private readonly UserManager<ApplicationUser>? userManager;
         private readonly IConfiguration? configuration;
         public SignService(UserManager<ApplicationUser>? _userManager,IConfiguration? _configuration)

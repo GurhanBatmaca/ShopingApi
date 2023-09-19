@@ -11,7 +11,6 @@ namespace shopapp.webapi.Controllers
     [Route("api/[Controller]")]
     public class ProductsController: ControllerBase
     {
-
         protected readonly IProductService productService;
         protected readonly ICategoryService categoryService;
 

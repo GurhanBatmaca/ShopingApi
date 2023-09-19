@@ -1,7 +1,4 @@
-using System.Security.Claims;
-using System.Text;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.WebUtilities;
 using shopapp.webapi.Helpers;
 using shopapp.webapi.Identity;
 using shopapp.webapi.IdentityServices.Abstract;
@@ -52,7 +49,7 @@ namespace shopapp.webapi.IdentityServices
             var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
             var validToken = TokenConverter.TokenToUrl(token);
             
-            await emailSender!.SendEmailAsync(user.Email!,"Üyelik Onayı.",$"Hesabınızı onaylamak için lütfen <a href='http://localhost:5197/api/Account/confirmemail/{validToken}&{user.Id}'>linke</a> tıklayınız");
+            await emailSender!.SendEmailAsync(user.Email!,"Account confirmation.",$"Please click on the link to confirm your account.<p><a href='http://localhost:5197/api/Account/confirmemail/{validToken}&{user.Id}'>Click</a></p>");
 
             await userManager.AddToRoleAsync(user,"Customer");
 
