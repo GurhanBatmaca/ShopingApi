@@ -70,5 +70,41 @@ namespace shopapp.webapi.Controllers
             return BadRequest(new ResponseObject{ Message = userService.Message });
             
         }
+
+        [HttpGet]
+        [Route("fargotpassword/{email}")]
+        public async Task<IActionResult> FargotPassword(string email)
+        {
+            if(string.IsNullOrEmpty(email))
+            {
+                return BadRequest("Email is required.");               
+            }
+
+            if(await userService!.FargotPasswordAsync(email))
+            {
+                return Ok(new ResponseObject{ Message = userService.Message });
+                
+            }
+
+            return BadRequest(new ResponseObject{ Message = userService.Message });  
+            
+        }
+
+        [HttpPost]
+        [Route("resetpassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(model);
+            }
+
+            if(await userService!.ResetPasswordAsync(model))
+            {
+                return Ok(new ResponseObject{ Message = userService.Message });
+            }
+
+            return BadRequest(new ResponseObject{ Message = userService.Message }); 
+        }
     }
 }

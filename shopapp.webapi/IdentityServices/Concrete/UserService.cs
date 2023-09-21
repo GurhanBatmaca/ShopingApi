@@ -87,6 +87,49 @@ namespace shopapp.webapi.IdentityServices
             Message += "Confirmation successful.";
             return true;
         }
+
+        public async Task<bool> FargotPasswordAsync(string email)
+        {
+            var user = await userManager!.FindByEmailAsync(email);
+            if(user == null)
+            {
+                Message += "User not found.";
+                return false;
+            }
+
+            var token = await userManager.GeneratePasswordResetTokenAsync(user);
+
+            var validToken = TokenConverter.TokenToUrl(token);
+            
+            await emailSender!.SendEmailAsync(user.Email!,"Password reset.",$"Password reset token: {validToken}");
+
+            Message += "Reset token has been sent to your email address.";
+            return true;
+        }
+
+        public async Task<bool> ResetPasswordAsync(ResetPasswordModel model)
+        {
+            var user = await userManager!.FindByEmailAsync(model.Email!);
+            if(user == null)
+            {
+                Message += "Invalid e-mail address.";
+                return false;
+            }
+
+            var validToken = TokenConverter.UrlToToken(model.Token!);
+
+            var result = await userManager.ResetPasswordAsync(user,validToken,model.NewPassword!);
+
+            if(!result.Succeeded)
+            {
+                Message += "Invalid token.";
+                return false;
+            }
+
+            Message += "Password change successful.";
+            return true;
+        }
+
         public string? Message { get; set; }
     }
 
