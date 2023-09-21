@@ -30,7 +30,7 @@ namespace shopapp.webapi.Controllers
             return Ok(products);
         }
 
-        [Authorize(Roles ="Admin")]
+        // [Authorize(Roles ="Admin")]
 
         [HttpGet]
         [Route("id={id}")]
@@ -41,7 +41,7 @@ namespace shopapp.webapi.Controllers
             return Ok(product);
         }
 
-        [Authorize(Roles ="Admin,Customer")]
+        // // [Authorize(Roles ="Admin,Customer")]
 
         [HttpGet]
         [Route("url={url}")]

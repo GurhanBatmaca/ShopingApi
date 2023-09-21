@@ -7,89 +7,45 @@ namespace shopapp.business.Concrete
 {
     public class ProductManager : IProductService
     {
-
         private readonly IUnitOfWork unitOfWork;
         public ProductManager(IUnitOfWork _unitOfWork)
         {
             unitOfWork = _unitOfWork;
         }
-        
 
-        public async Task CreateAsync(Product entity)
+        public string? Message { get; set; }
+
+        public async Task<bool> CreateAsync(Product entity)
         {
+            if(!Validation(entity))
+            {
+                return false;
+            }
+
             await unitOfWork.Products.CreateAsync(entity);
+            Message += "Product created";
+            return true;
         }
-
-        public void Delete(Product entity)
-        {
-            unitOfWork.Products.Delete(entity);
-        }
-
-        public Task<List<Product>> GetAllAsync()
-        {
-            return unitOfWork.Products.GetAllAsync();
-        }
-
-        public async Task<Product?> GetByIdAsync(int id)
-        {
-            return await unitOfWork.Products.GetByIdAsync(id);
-        }
-
-        public void Update(Product entity)
-        {
-            unitOfWork.Products.Update(entity);
-        }
-
-        public string ErrorMessage { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public bool Validation(Product entity)
         {
-            throw new NotImplementedException();
-        }
-
-        public async Task<List<Product>?> GetHomePageProducts()
-        {
-            return await unitOfWork.Products.GetHomePageProducts();
-        }
-
-        public async Task<List<Product>?> GetProductsByCategory(string category, int page, int pageSize)
-        {
-            return await unitOfWork.Products.GetProductsByCategory(category, page, pageSize);
-        }
-
-        public async Task<int> GetProductsCountByCategory(string category)
-        {
-            return await unitOfWork.Products.GetProductsCountByCategory(category);
-        }
-
-        public async Task<Product?> GetProductDetails(string url)
-        {
-            return await unitOfWork.Products.GetProductDetails(url);
-        }
-
-        public async Task<List<Product>?> GetSearchResult(string q, int page, int pageSize)
-        {
-            return await unitOfWork.Products.GetSearchResult(q, page, pageSize);
-        }
-
-        public async Task<int> GetProductsCountBySearch(string searchString)
-        {
-            return await unitOfWork.Products.GetProductsCountBySearch(searchString);
-        }
-
-        public async Task<List<Product>?> GetPopularProducts(int page, int pageSize)
-        {
-            return await unitOfWork.Products.GetPopularProducts(page, pageSize);
-        }
-
-        public async Task<int> GetProductsCountByPopular()
-        {
-            return await unitOfWork.Products.GetProductsCountByPopular();
-        }
-
-        public async Task<int> CountAsync()
-        {
-            return await unitOfWork.Products.CountAsync();
+            if(string.IsNullOrEmpty(entity.Name))
+            {
+                Message += "Name is required";
+                return false;
+            }
+            if(string.IsNullOrEmpty(entity.Description))
+            {
+                Message += "Description is required";
+                return false;
+            }
+            if(entity.Price < 1)
+            {
+                Message += "Price is must be positive number.";
+                return false;
+            }
+            
+            return true;
         }
 
         public async Task<List<Product>?> GetAllProductsByPage(int page, int pageSize)
@@ -97,14 +53,14 @@ namespace shopapp.business.Concrete
             return await unitOfWork.Products.GetAllProductsByPage(page, pageSize);
         }
 
-        public async Task<Product?> GetByIdWithCategories(int id)
+        public async Task<Product?> GetByIdAsync(int id)
         {
-            return await unitOfWork.Products.GetByIdWithCategories(id);
+            return await unitOfWork.Products.GetByIdAsync(id);
         }
 
-        public void Update(Product entity, int[] categoriesIds)
+        public async Task<Product?> GetProductDetails(string url)
         {
-            unitOfWork.Products.Update(entity, categoriesIds);
+            return await unitOfWork.Products.GetProductDetails(url);
         }
     }
 }

@@ -2,7 +2,7 @@ namespace shopapp.business.Abstract
 {
     public interface IValidator<T>
     {
-        string ErrorMessage { get; set; }
+        string? Message { get; set; }
         bool Validation (T entity);
     }
 }

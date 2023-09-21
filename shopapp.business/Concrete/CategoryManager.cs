@@ -39,7 +39,8 @@ namespace shopapp.business.Concrete
             unitOfWork.Categories.Update(entity);
         }
 
-        public string ErrorMessage { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string Message { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        string IValidator<Category>.Message { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public bool Validation(Category entity)
         {
@@ -49,6 +50,41 @@ namespace shopapp.business.Concrete
         public async Task<int> CountAsync()
         {
             return await unitOfWork.Categories.CountAsync();
+        }
+
+        Task<Category?> ICategoryService.GetByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<List<Category>> ICategoryService.GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task ICategoryService.CreateAsync(Category entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        void ICategoryService.Update(Category entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        void ICategoryService.Delete(Category entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<int> ICategoryService.CountAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IValidator<Category>.Validation(Category entity)
+        {
+            throw new NotImplementedException();
         }
     }
 }
