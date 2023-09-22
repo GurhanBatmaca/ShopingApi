@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using shopapp.data.Abstract;
 using shopapp.entity;
+using shopapp.webui.Helpers;
 
 namespace shopapp.data.Concrete.EfCore
 {
@@ -149,5 +151,33 @@ namespace shopapp.data.Concrete.EfCore
             }
         }
 
+        public async Task UpdateProduct(int id, JsonPatchDocument<Product> patchDocument)
+        {
+            var entity = await ShopContext!.Products
+                                    .Where(p => p.Id == id)
+                                    .FirstOrDefaultAsync();
+
+            var product = new Product()
+            {
+                Name = entity!.Name,
+                Price = entity.Price,
+                Description = entity.Description,
+                IsAproved = entity.IsAproved,
+                IsHome = entity.IsHome,
+                IsPopular = entity.IsPopular,
+                Url = entity.Url
+            };
+
+            patchDocument.ApplyTo(product);
+
+            entity.Name = product.Name;
+            entity.Price = product.Price;
+            entity.Description = product.Description;
+            entity.IsAproved = product.IsAproved;
+            entity.IsHome = product.IsHome;
+            entity.Url = UrlModifier.Modifie(product.Name!);
+
+            await ShopContext.SaveChangesAsync();
+        }
     }
 }

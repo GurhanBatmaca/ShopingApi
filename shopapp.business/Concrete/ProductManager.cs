@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.JsonPatch;
 using shopapp.business.Abstract;
 using shopapp.data.Abstract;
 using shopapp.entity;
@@ -61,6 +62,21 @@ namespace shopapp.business.Concrete
         public async Task<Product?> GetProductDetails(string url)
         {
             return await unitOfWork.Products.GetProductDetails(url);
+        }
+
+        public async Task<bool> UpdateProduct(int id, JsonPatchDocument<Product> patchDocument)
+        {
+            var entity = await unitOfWork.Products.GetByIdAsync(id);
+
+            if(entity == null)
+            {
+                Message += "Product not faound.";
+                return false;
+            }
+
+            await unitOfWork.Products.UpdateProduct(id,patchDocument);
+            Message += "Product updated.";
+            return true;
         }
     }
 }

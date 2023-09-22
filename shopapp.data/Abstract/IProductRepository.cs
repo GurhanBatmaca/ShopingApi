@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.JsonPatch;
 using shopapp.entity;
 
 namespace shopapp.data.Abstract
@@ -15,6 +16,8 @@ namespace shopapp.data.Abstract
         Task<List<Product>?> GetAllProductsByPage(int page,int pageSize);
         Task<Product?> GetByIdWithCategories(int id);
         void Update(Product entity,int[] categoriesIds);
+
+        Task UpdateProduct(int id,JsonPatchDocument<Product> patchDocument);
 
     }
 }

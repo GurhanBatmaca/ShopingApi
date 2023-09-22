@@ -1,4 +1,6 @@
+using Azure;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using shopapp.business.Abstract;
 using shopapp.entity;
@@ -34,6 +36,24 @@ namespace shopapp.webapi.Controllers
             }
 
             return BadRequest( new ResponseObject{ Message = productService.Message } );
+        }
+
+        [HttpPatch]
+        [Route("updateproduct/{id}")]
+        public async Task<IActionResult> UpdateProduct(int id, [FromBody] JsonPatchDocument<Product> patchDocument)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(patchDocument);
+            }
+
+            if(await productService.UpdateProduct(id,patchDocument))
+            {
+                return Ok(await productService.GetByIdAsync(id));
+            }
+
+            return BadRequest( new ResponseObject{ Message = productService.Message } );
+
         }
     }
 }
