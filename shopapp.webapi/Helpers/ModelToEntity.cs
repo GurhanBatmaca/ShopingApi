@@ -1,6 +1,6 @@
 using shopapp.entity;
+using shopapp.shared;
 using shopapp.webapi.Model;
-using shopapp.webui.Helpers;
 
 namespace shopapp.webapi.Helpers
 {
@@ -12,7 +12,7 @@ namespace shopapp.webapi.Helpers
             {
                 Name = model.Name,
                 Description = model.Description,
-                Price = model.Price,
+                Price = model.Price!,
                 Url = UrlModifier.Modifie(model.Name!),
                 IsAproved =model.IsAproved,
                 IsHome = model.IsHome,

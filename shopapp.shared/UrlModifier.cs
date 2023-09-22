@@ -1,4 +1,4 @@
-namespace shopapp.webui.Helpers
+namespace shopapp.shared
 {
     public static class UrlModifier
     {

@@ -42,12 +42,24 @@ namespace shopapp.webapi.Controllers
         [Route("updateproduct/{id}")]
         public async Task<IActionResult> UpdateProduct(int id, [FromBody] JsonPatchDocument<Product> patchDocument)
         {
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(patchDocument);
-            }
+            
 
-            if(await productService.UpdateProduct(id,patchDocument))
+            var exEntity = await productService.GetByIdAsync(id);
+
+            var product = new Product()
+            {
+                Name = exEntity!.Name,
+                Price = exEntity.Price,
+                Description = exEntity.Description,
+                IsAproved = exEntity.IsAproved,
+                IsHome = exEntity.IsHome,
+                IsPopular = exEntity.IsPopular,
+                Url = exEntity.Url
+            };
+
+            patchDocument.ApplyTo(product,ModelState);
+
+            if(await productService.UpdateProduct(exEntity,product))
             {
                 return Ok(await productService.GetByIdAsync(id));
             }

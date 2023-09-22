@@ -10,7 +10,7 @@ namespace shopapp.webapi.DTO
             {
                 Id = p.Id,
                 Name = p.Name,
-                Price = p.Price,
+                Price = (double)p.Price!,
                 Description = p.Description,
                 ImageUrl = p.ImageUrl,
                 Url = p.Url

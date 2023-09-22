@@ -64,17 +64,21 @@ namespace shopapp.business.Concrete
             return await unitOfWork.Products.GetProductDetails(url);
         }
 
-        public async Task<bool> UpdateProduct(int id, JsonPatchDocument<Product> patchDocument)
+        public async Task<bool> UpdateProduct(Product exEntity,Product product)
         {
-            var entity = await unitOfWork.Products.GetByIdAsync(id);
-
-            if(entity == null)
+            if(exEntity == null)
             {
                 Message += "Product not faound.";
                 return false;
             }
 
-            await unitOfWork.Products.UpdateProduct(id,patchDocument);
+            if(product.Price < 1)
+            {
+                Message += "Price must be a positive number.";
+                return false;
+            }
+
+            await unitOfWork.Products.UpdateProduct(exEntity,product);
             Message += "Product updated.";
             return true;
         }

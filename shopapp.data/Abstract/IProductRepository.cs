@@ -17,7 +17,7 @@ namespace shopapp.data.Abstract
         Task<Product?> GetByIdWithCategories(int id);
         void Update(Product entity,int[] categoriesIds);
 
-        Task UpdateProduct(int id,JsonPatchDocument<Product> patchDocument);
+        Task UpdateProduct(Product exEntity,Product product);
 
     }
 }

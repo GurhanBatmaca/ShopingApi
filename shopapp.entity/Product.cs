@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace shopapp.entity
 {
     public class Product
