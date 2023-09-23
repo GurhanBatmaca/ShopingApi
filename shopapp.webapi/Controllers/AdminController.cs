@@ -39,15 +39,20 @@ namespace shopapp.webapi.Controllers
         }
 
         [HttpPatch]
-        [Route("updateproduct/{id}")]
-        public async Task<IActionResult> UpdateProduct(int id, [FromBody] JsonPatchDocument<Product> patchDocument)
+        [Route("update/{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] JsonPatchDocument<Product> patchDocument)
         {
             
-
             var exEntity = await productService.GetByIdAsync(id);
+
+            if(exEntity == null)
+            {
+                return BadRequest( new ResponseObject{ Message = "Entity not found" } );
+            }
 
             var product = new Product()
             {
+                Id = exEntity.Id,
                 Name = exEntity!.Name,
                 Price = exEntity.Price,
                 Description = exEntity.Description,
@@ -59,9 +64,11 @@ namespace shopapp.webapi.Controllers
 
             patchDocument.ApplyTo(product,ModelState);
 
-            if(await productService.UpdateProduct(exEntity,product))
+            if(await productService.UpdateAsync(exEntity,product))
             {
-                return Ok(await productService.GetByIdAsync(id));
+
+                return Ok(product);
+
             }
 
             return BadRequest( new ResponseObject{ Message = productService.Message } );

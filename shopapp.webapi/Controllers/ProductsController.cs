@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using shopapp.business.Abstract;
 using shopapp.entity;
 using shopapp.webapi.DTO;
+using shopapp.webapi.Model;
 
 namespace shopapp.webapi.Controllers
 {
@@ -37,6 +38,10 @@ namespace shopapp.webapi.Controllers
         public async Task<IActionResult> GetProductById(int id)
         {
             var product = await productService.GetByIdAsync(id);
+            if(product == null)
+            {
+                return BadRequest( new ResponseObject{ Message = "Product not found." } );
+            }
 
             return Ok(product);
         }

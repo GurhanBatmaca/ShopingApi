@@ -9,6 +9,6 @@ namespace shopapp.business.Abstract
         Task<List<Product>?> GetAllProductsByPage(int page,int pageSize);
         Task<Product?> GetByIdAsync(int id);
         Task<Product?> GetProductDetails(string url);
-        Task<bool> UpdateProduct(Product exEntity,Product product);
+        Task<bool> UpdateAsync(Product exEntity,Product product);
     }
 }

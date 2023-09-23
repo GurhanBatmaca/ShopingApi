@@ -64,23 +64,25 @@ namespace shopapp.business.Concrete
             return await unitOfWork.Products.GetProductDetails(url);
         }
 
-        public async Task<bool> UpdateProduct(Product exEntity,Product product)
+        public async Task<bool> UpdateAsync(Product exEntity,Product product)
         {
-            if(exEntity == null)
-            {
-                Message += "Product not faound.";
-                return false;
-            }
-
+            
             if(product.Price < 1)
             {
                 Message += "Price must be a positive number.";
                 return false;
             }
 
-            await unitOfWork.Products.UpdateProduct(exEntity,product);
+            if(string.IsNullOrEmpty(product.Name) || string.IsNullOrEmpty(product.Description))
+            {
+                Message += "Name and Description required.";
+                return false;
+            }
+
+            await unitOfWork.Products.UpdateAsync(exEntity,product);
             Message += "Product updated.";
             return true;
         }
+
     }
 }
