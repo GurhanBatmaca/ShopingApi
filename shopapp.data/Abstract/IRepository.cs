@@ -6,7 +6,7 @@ namespace shopapp.data.Abstract
         Task<List<T>> GetAllAsync();
         Task CreateAsync(T entity);
         void Update(T entity);
-        void Delete(T entity);
+        Task DeleteAsync(T entity);
         Task<int> CountAsync();
     }
 }

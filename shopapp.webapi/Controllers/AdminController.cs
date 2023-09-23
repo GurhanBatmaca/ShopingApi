@@ -39,8 +39,8 @@ namespace shopapp.webapi.Controllers
         }
 
         [HttpPatch]
-        [Route("update/{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] JsonPatchDocument<Product> patchDocument)
+        [Route("updateproduct/{id}")]
+        public async Task<IActionResult> UpdateProduct(int id, [FromBody] JsonPatchDocument<Product> patchDocument)
         {
             
             var exEntity = await productService.GetByIdAsync(id);
@@ -74,5 +74,29 @@ namespace shopapp.webapi.Controllers
             return BadRequest( new ResponseObject{ Message = productService.Message } );
 
         }
+    
+        [HttpDelete]
+        [Route("deleteproduct/{id}")]
+
+        public async Task<IActionResult> DeleteProduct(int? id)
+        {
+            if(id == null)
+            {
+                return BadRequest( new ResponseObject{ Message = "Id is required." } );
+            }
+
+            var entity = await productService.GetByIdAsync((int)id);
+
+            if(entity == null)
+            {
+                return BadRequest( new ResponseObject{ Message = "Product not found." } );
+            }
+
+            await productService.DeleteAsync(entity);
+
+            return Ok( new ResponseObject{ Message = "Delete product successful." } );
+        }
+
+
     }
 }

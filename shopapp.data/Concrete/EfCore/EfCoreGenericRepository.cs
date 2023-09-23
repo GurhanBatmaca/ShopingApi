@@ -25,10 +25,10 @@ namespace shopapp.data.Concrete.EfCore
             await context.SaveChangesAsync();
         }
 
-        public void Delete(T entity)
+        public async Task DeleteAsync(T entity)
         {
             context.Set<T>().Remove(entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
         public async Task<List<T>> GetAllAsync()
@@ -48,5 +48,6 @@ namespace shopapp.data.Concrete.EfCore
             context.SaveChanges(); 
         }
 
+    
     }
 }

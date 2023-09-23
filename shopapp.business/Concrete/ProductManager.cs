@@ -84,5 +84,9 @@ namespace shopapp.business.Concrete
             return true;
         }
 
+        public async Task DeleteAsync(Product product)
+        {
+            await unitOfWork.Products.DeleteAsync(product);
+        }
     }
 }
