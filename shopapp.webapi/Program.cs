@@ -51,16 +51,13 @@ builder.Services.Configure<IdentityOptions>(options => {
 });
 
 builder.Services.ConfigureApplicationCookie(options => {
-    options.LoginPath = "/account/login"; 
-    options.LogoutPath = "/account/logout"; 
-    options.AccessDeniedPath = "/account/accessdenied"; 
     options.SlidingExpiration = true; 
     options.ExpireTimeSpan = TimeSpan.FromDays(7); 
 
     options.Cookie = new CookieBuilder
     {
         HttpOnly = true, 
-        Name = ".MyShopapp.Security.Cookie",
+        Name = ".MyShopApi.Security.Cookie",
         SameSite = SameSiteMode.Strict
     };
 });

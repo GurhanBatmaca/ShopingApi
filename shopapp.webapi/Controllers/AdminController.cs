@@ -77,7 +77,6 @@ namespace shopapp.webapi.Controllers
     
         [HttpDelete]
         [Route("deleteproduct/{id}")]
-
         public async Task<IActionResult> DeleteProduct(int? id)
         {
             if(id == null)
