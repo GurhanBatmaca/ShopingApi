@@ -50,7 +50,7 @@ namespace shopapp.webapi.IdentityServices
 
             var claims = new List<Claim>()
             {
-                new Claim("Email",model.Password!),
+                new Claim("Email",model.Email!),
                 new Claim(ClaimTypes.NameIdentifier,user.Id)             
             };
 
