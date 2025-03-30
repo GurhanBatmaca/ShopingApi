@@ -1,4 +1,4 @@
-# 🎟 Etkinlik Biletleri Alım Satım API
+# 🎟 E-Ticaret API
 
 **ShopApi**, **ASP.NET Core Web API** kullanılarak geliştirilen modern bir e-ticaret API'sidir. API, **katmanlı mimari** yaklaşımına göre yapılandırılmıştır. Kullanıcı doğrulaması ve rol tabanlı yetkilendirme **JWT Bearer Token** kullanılarak yapılır. **Entity Framework** veri erişimi için, **Microsoft SQL Server** ise veritabanı olarak kullanılmaktadır.
 
