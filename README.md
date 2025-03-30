@@ -49,6 +49,7 @@ Aşağıda API'de kullanılan endpoint'ler ve HTTP istek metotları listelenmiş
 
 ### 1️⃣ **Ürün İsteme Yanıtı**
 
+```json
 {
     "data": [
         {
@@ -71,6 +72,7 @@ Aşağıda API'de kullanılan endpoint'ler ve HTTP istek metotları listelenmiş
         "totalPages": 50
     }
 }
+```
 
 ---
 
